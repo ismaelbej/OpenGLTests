@@ -57,17 +57,12 @@ void main() {
     (let* ((vertex-array (gl:gen-vertex-array))
 	   (buffers (gl:gen-buffers 2))
 	   (vertex-buffer (elt buffers 0))
-	   (color-buffer (elt buffers 1))
 	   (program (link-program)))
       (gl:bind-vertex-array vertex-array)
       (gl:bind-buffer :array-buffer vertex-buffer)
       (load-buffer-array #(-1.0 -1.0 0.0
 		   1.0 -1.0 0.0
 		   0.0 1.0 0.0))
-      (gl:bind-buffer :array-buffer color-buffer)
-      (load-buffer-array #(1.0 0.0 0.0
-			   0.0 1.0 0.0
-			   0.0 0.0 1.0))
       (gl:clear-color 0 0 0.4 0)
       (loop while (glop:dispatch-events win :blocking nil :on-foo nil) do
 	   (gl:clear :color-buffer-bit :depth-buffer-bit)

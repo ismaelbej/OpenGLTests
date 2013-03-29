@@ -1,7 +1,7 @@
 (require 'cl-opengl) 
 (require 'glop)
 
-(defvar *shader-source* 
+(defparameter *shader-source* 
 "#version 330 core
 layout(location = 0) in vec3 in_Position;
 void main() {
@@ -9,7 +9,7 @@ void main() {
   gl_Position.w = 1.0;
 }")
 
-(defvar *fragment-source*
+(defparameter *fragment-source*
 "#version 330 core
 out vec3 out_Color;
 void main() {
@@ -23,14 +23,14 @@ void main() {
   (when (eq (glop:keysym event) :escape)
     (glop:push-close-event window)))
 
-(defun link-program ()
+(defun link-program (shader-source fragment-source)
   (let ((vs (gl:create-shader :vertex-shader))
 	(fs (gl:create-shader :fragment-shader))
 	(pg (gl:create-program)))
-    (gl:shader-source vs *shader-source*)
+    (gl:shader-source vs shader-source)
     (gl:compile-shader vs)
     ;;(print (gl:get-shader-info-log vs))
-    (gl:shader-source fs *fragment-source*)
+    (gl:shader-source fs fragment-source)
     (gl:compile-shader fs)
     ;;(print (gl:get-shader-info-log fs))
     (gl:attach-shader pg vs)
@@ -57,7 +57,7 @@ void main() {
     (let* ((vertex-array (gl:gen-vertex-array))
 	   (buffers (gl:gen-buffers 2))
 	   (vertex-buffer (elt buffers 0))
-	   (program (link-program)))
+	   (program (link-program *shader-source* *fragment-source*)))
       (gl:bind-vertex-array vertex-array)
       (gl:bind-buffer :array-buffer vertex-buffer)
       (load-buffer-array #(-1.0 -1.0 0.0

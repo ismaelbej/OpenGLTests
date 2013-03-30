@@ -1,3 +1,5 @@
+(in-package :opengl-tutorial)
+
 (defmacro d->r (deg)
   `(* 0.01745329252 ,deg))
 

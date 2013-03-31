@@ -30,7 +30,7 @@ void main() {
 	   (projection (perspective 45.0 (/ 4.0 3.0) 0.1 100.0))
 	   (camera (make-vec3 4 3 3))
 	   (model (make-mat4 1.0))
-	   (view (make-mat4 1.0))
+	   (view (look-at camera #(0 0 0) #(0 1 0)))
 	   MVP
 	   (angle 0.0))
       (gl:bind-vertex-array vertex-array)
@@ -106,9 +106,9 @@ void main() {
       (gl:enable :depth-test :cull-face)
       (gl:depth-func :less)
       (loop while (glop:dispatch-events win :blocking nil :on-foo nil) do
-	   ;;(setf model (rotation angle #(0 1 0)))
+	   (setf model (rotation 0 #(0 0 1)))
 	   (setf view (look-at 
-		       (mvprod (rotation angle #(0 1 0)) camera) 
+		       (mvprod (rotation angle #(0 1 0)) camera)
 		       #(0 0 0) 
 		       #(0 1 0)))
 	   (setf MVP (mprod projection (mprod view model)))

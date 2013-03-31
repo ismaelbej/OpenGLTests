@@ -5,8 +5,7 @@
 layout(location = 0) in vec3 in_Position;
 uniform mat4 MVP;
 void main() {
-  vec4 v = vec4(in_Position, 1.0);
-  gl_Position = MVP * v;
+  gl_Position = MVP * vec4(in_Position, 1.0);
 }")
 
 (defparameter *tutorial3-fragment-source*
@@ -35,7 +34,7 @@ void main() {
       (loop while (glop:dispatch-events win :blocking nil :on-foo nil) do
 	   (gl:clear :color-buffer-bit)
 	   (gl:use-program program)
-	   (gl:uniform-matrix matrixId 4 (vector mat) nil)
+	   (gl:uniform-matrix matrixId 4 `#(,mat) nil)
 	   (enable-vertex-array 0 vertex-buffer)
 	   (gl:draw-arrays :triangles 0 3)
 	   (gl:disable-vertex-attrib-array 0)

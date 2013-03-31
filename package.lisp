@@ -3,4 +3,5 @@
   (:export :tutorial1
 	   :tutorial2a
 	   :tutorial2b
-	   :tutorial3))
+	   :tutorial3
+	   :tutorial4))

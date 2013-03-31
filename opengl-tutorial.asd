@@ -15,4 +15,5 @@
                (:file "tutorial1")
 	       (:file "tutorial2a")
 	       (:file "tutorial2b")
-	       (:file "tutorial3")))
+	       (:file "tutorial3")
+	       (:file "tutorial4")))

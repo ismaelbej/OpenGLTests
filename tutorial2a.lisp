@@ -4,8 +4,7 @@
 "#version 330 core
 layout(location = 0) in vec3 in_Position;
 void main() {
-  gl_Position.xyz = in_Position;
-  gl_Position.w = 1.0;
+  gl_Position = vec4(in_Position, 1.0);
 }")
 
 (defparameter *tutorial2a-fragment-source*
@@ -18,7 +17,7 @@ void main() {
 (defun tutorial2a ()
   (glop:with-window (win "tutorial 2a" 500 500 :major 3 :minor 3)
     (let* ((vertex-array (gl:gen-vertex-array))
-	   (buffers (gl:gen-buffers 2))
+	   (buffers (gl:gen-buffers 1))
 	   (vertex-buffer (elt buffers 0))
 	   (program (link-program *tutorial2a-shader-source* *tutorial2a-fragment-source*)))
       (gl:bind-vertex-array vertex-array)
@@ -33,5 +32,8 @@ void main() {
 	   (enable-vertex-array 0 vertex-buffer)
 	   (gl:draw-arrays :triangles 0 3)
 	   (gl:disable-vertex-attrib-array 0)
-	   (glop:swap-buffers win)))))
+	   (glop:swap-buffers win))
+      (gl:delete-buffers buffers)
+      (gl:delete-program program)
+      (gl:delete-vertex-arrays `(,vertex-array)))))
 

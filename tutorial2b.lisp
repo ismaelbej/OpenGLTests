@@ -43,5 +43,8 @@ void main() {
 	   (gl:draw-arrays :triangles 0 3)
 	   (gl:disable-vertex-attrib-array 0)
 	   (gl:disable-vertex-attrib-array 1)
-	   (glop:swap-buffers win)))))
+	   (glop:swap-buffers win))
+      (gl:delete-buffers buffers)
+      (gl:delete-program program)
+      (gl:delete-vertex-arrays `(,vertex-array)))))
 

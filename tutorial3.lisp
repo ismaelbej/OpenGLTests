@@ -19,7 +19,7 @@ void main() {
 (defun tutorial3 ()
   (glop:with-window (win "tutorial 3" 500 500 :major 3 :minor 3)
     (let* ((vertex-array (gl:gen-vertex-array))
-	   (buffers (gl:gen-buffers 2))
+	   (buffers (gl:gen-buffers 1))
 	   (vertex-buffer (elt buffers 0))
 	   (program (link-program *tutorial3-shader-source* *tutorial3-fragment-source*))
 	   (matrixId (gl:get-uniform-location program "MVP"))
@@ -39,5 +39,8 @@ void main() {
 	   (enable-vertex-array 0 vertex-buffer)
 	   (gl:draw-arrays :triangles 0 3)
 	   (gl:disable-vertex-attrib-array 0)
-	   (glop:swap-buffers win)))))
+	   (glop:swap-buffers win))
+      (gl:delete-buffers buffers)
+      (gl:delete-program program)
+      (gl:delete-vertex-arrays `(,vertex-array)))))
 

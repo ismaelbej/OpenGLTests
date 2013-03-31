@@ -7,8 +7,7 @@ layout(location = 1) in vec3 in_Color;
 uniform mat4 MVP;
 out vec3 ex_Color;
 void main() {
-  vec4 v = vec4(in_Position, 1.0);
-  gl_Position = MVP * v;
+  gl_Position = MVP * vec4(in_Position, 1.0);
   ex_Color = in_Color;
 }")
 
@@ -28,11 +27,11 @@ void main() {
 	   (color-buffer (elt buffers 1))
 	   (program (link-program *tutorial4-shader-source* *tutorial4-fragment-source*))
 	   (matrixId (gl:get-uniform-location program "MVP"))
-	   ;;(projection (perspective 45.0 (/ 4.0 3.0) 0.1 100.0))
-	   (projection (ortho -4 4 -3 3 0.1 100))
-	   (view (look-at #(4 3 3) #(0 0 0) #(0 1 0)))
-	   (model (make-mat4x4 1.0))
-	   (mat (mprod projection view))
+	   (projection (perspective 45.0 (/ 4.0 3.0) 0.1 100.0))
+	   (camera (make-vec3 4 3 3))
+	   (model (make-mat4 1.0))
+	   (view (make-mat4 1.0))
+	   MVP
 	   (angle 0.0))
       (gl:bind-vertex-array vertex-array)
       (gl:bind-buffer :array-buffer vertex-buffer)
@@ -52,7 +51,7 @@ void main() {
 			   0.0 1.0 0.0
 			   0.0 0.0 1.0
 
-			   ;;
+
 			   0.0 0.0 1.0
 			   -1.0 0.0 0.0
 			   0.0 -1.0 0.0
@@ -107,11 +106,15 @@ void main() {
       (gl:enable :depth-test :cull-face)
       (gl:depth-func :less)
       (loop while (glop:dispatch-events win :blocking nil :on-foo nil) do
-	   (setf model (rotation angle #(0 1 0)))
+	   ;;(setf model (rotation angle #(0 1 0)))
+	   (setf view (look-at 
+		       (mvprod (rotation angle #(0 1 0)) camera) 
+		       #(0 0 0) 
+		       #(0 1 0)))
+	   (setf MVP (mprod projection (mprod view model)))
 	   (gl:clear :color-buffer-bit :depth-buffer-bit)
-	   ;;(gl:clear :color-buffer-bit)
 	   (gl:use-program program)
-	   (gl:uniform-matrix matrixId 4 (vector (mprod mat model)) nil)
+	   (gl:uniform-matrix matrixId 4 `#(,MVP) nil)
 	   (enable-vertex-array 0 vertex-buffer)
 	   (enable-vertex-array 1 color-buffer)
 	   (gl:draw-arrays :triangles 0 24)
